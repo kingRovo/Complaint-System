@@ -3,13 +3,16 @@ package com.example.complaint_management_system.service;
 import com.example.complaint_management_system.model.Complaint;
 import com.example.complaint_management_system.repository.ComplaintRepo;
 import com.example.complaint_management_system.repository.VendorRepo;
+import java.util.Collections;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class VendorService {
 
     private final VendorRepo vendorRepo;
@@ -17,13 +20,16 @@ public class VendorService {
     public List<Complaint> findAllComplaint(Long vendor_id){
 
         try {
-            if (!ObjectUtils.isEmpty(vendorRepo.findById(vendor_id)))
-            return complaintRepo.findComplaint(vendor_id);
-            else return null;
+            if (!ObjectUtils.isEmpty(vendorRepo.findById(vendor_id))){
+
+
+                return complaintRepo.findComplaint(vendor_id);
+            }
+            else return Collections.emptyList();
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
+            log.error(e.getMessage());
+            return Collections.emptyList();
         }
     }
 
@@ -34,15 +40,24 @@ public class VendorService {
             complaint.setStatus(status);
             complaint.setRemarks(remark);
             complaintRepo.save(complaint);
+            log.info("status changed as :"+status);
             return status;
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return e.getMessage();
         }
     }
     public List<Complaint> allAssignedOpenJobs(Long vendor_id){
 
-        return complaintRepo.findOpenComplaint(vendor_id,"Open");
+        try{
+            return complaintRepo.findOpenComplaint(vendor_id,"Open");
+
+        }
+        catch (Exception e){
+
+            return Collections.emptyList();
+        }
     }
 
 }

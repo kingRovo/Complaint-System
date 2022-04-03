@@ -15,10 +15,16 @@ public class ComplaintService {
     private final ComplaintRepo complaintRepo;
 
     public void addComplaint(Complaint complaint){
+        try{
 
-        log.info("hello mw mrra");
+            complaintRepo.save(complaint);
+            log.info("new complaint raised");
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+        }
 
-        complaintRepo.save(complaint);
+
     }
 
 }

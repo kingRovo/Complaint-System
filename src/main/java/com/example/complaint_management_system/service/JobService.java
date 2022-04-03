@@ -6,12 +6,14 @@ import com.example.complaint_management_system.repository.JobRepo;
 import com.example.complaint_management_system.repository.VendorRepo;
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class JobService {
 
      private final JobRepo jobRepo;
@@ -24,9 +26,11 @@ public class JobService {
 
          try{
          jobRepo.save(job);
+         log.info("new job added to system");
          }
          catch (Exception exception){
-             System.out.println(exception.getMessage());
+             log.error(exception.getMessage());
+
          }
      }
 
@@ -37,12 +41,20 @@ public class JobService {
          Vendor vendor = vendorRepo.getById(vendor_id);
          if (!job.getIsInternal()){
              job.setAssignedTo(vendor);
+             log.info("job assigned to vendor");
              jobRepo.save(job);
          }
      }
 
      public  Job findjob(Long id){
 
-        return jobRepo.findById(id).orElseThrow();
+        try{
+            return jobRepo.findById(id).orElseThrow();
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+
      }
 }

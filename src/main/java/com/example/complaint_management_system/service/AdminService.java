@@ -8,15 +8,18 @@ import com.example.complaint_management_system.repository.AdminRepo;
 import com.example.complaint_management_system.repository.ComplaintRepo;
 import com.example.complaint_management_system.repository.EmployeeRepo;
 import com.example.complaint_management_system.repository.VendorRepo;
+import java.util.Collections;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
+
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AdminService {
 
     private final AdminRepo adminRepo;
@@ -30,12 +33,15 @@ public class AdminService {
     public void addAdmin(Admin admin){
 
         try{
-            if (!ObjectUtils.isEmpty(admin))
+            if (!ObjectUtils.isEmpty(admin)) {
                 adminRepo.save(admin);
+                log.info("new entry as admin");
+            }
         }
         catch (Exception e){
 
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+
         }
     }
 
@@ -43,12 +49,16 @@ public class AdminService {
     public void addEmployee(Employee employee){
 
         try{
-            if (!ObjectUtils.isEmpty(employee))
-            employeeRepo.save(employee);
+            if (!ObjectUtils.isEmpty(employee)){
+                employeeRepo.save(employee);
+                log.info("new employee added");
+            }
+
         }
         catch (Exception e){
 
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+
         }
     }
 
@@ -59,11 +69,13 @@ public class AdminService {
         try {
             if (!ObjectUtils.isEmpty(employeeRepo.getById(employee_id))){
                 employeeRepo.deleteById(employee_id);
+                log.info("employee remove at id : "+employee_id);
             }
         }
         catch (Exception e){
 
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+
         }
     }
 
@@ -72,12 +84,14 @@ public class AdminService {
     public void addVendor(Vendor vendor){
 
         try{
-            if (!ObjectUtils.isEmpty(vendor))
+            if (!ObjectUtils.isEmpty(vendor)){
                 vendorRepo.save(vendor);
-        }
+                log.info("new vendor added ");
+        }}
         catch (Exception e){
 
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+
         }
     }
 
@@ -88,23 +102,26 @@ public class AdminService {
         try {
             if (!ObjectUtils.isEmpty(employeeRepo.getById(vendor_id))){
                 employeeRepo.deleteById(vendor_id);
+                log.info("vendor removed at Id :"+vendor_id);
             }
         }
         catch (Exception e){
 
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
+
         }
     }
 
     public List<Complaint> openComplaint(){
 
        try{
+
            return complaintRepo.OpenComplaints("Open");
        }
        catch (Exception exception){
 
-           System.out.println(exception.getMessage());
-           return null;
+           log.error(exception.getMessage());
+           return Collections.emptyList();
        }
     }
 
@@ -116,9 +133,11 @@ public class AdminService {
             complaint.setStatus(status);
             complaint.setRemarks(remark);
             complaintRepo.save(complaint);
+            log.info("status changed with special remark");
             return status;
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return e.getMessage();
         }
     }
