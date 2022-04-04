@@ -131,6 +131,9 @@ public class AdminService {
         try {
             Complaint complaint = complaintRepo.getById(complaint_id);
             complaint.setStatus(status);
+            if(status.equals("reopen")){
+                complaint.setReOpened(complaint.getReOpened()+1);
+            }
             complaint.setRemarks(remark);
             complaintRepo.save(complaint);
             log.info("status changed with special remark");
