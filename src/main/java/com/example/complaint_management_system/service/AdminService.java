@@ -100,8 +100,8 @@ public class AdminService {
     public void removeVendor(Long vendor_id){
 
         try {
-            if (!ObjectUtils.isEmpty(employeeRepo.getById(vendor_id))){
-                employeeRepo.deleteById(vendor_id);
+            if (!ObjectUtils.isEmpty(vendorRepo.getById(vendor_id))){
+                vendorRepo.deleteById(vendor_id);
                 log.info("vendor removed at Id :"+vendor_id);
             }
         }
